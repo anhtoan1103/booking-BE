@@ -7,21 +7,26 @@ use std::env;
 // etc.
 
 pub async fn connect_db() -> Result<Pool<Postgres>, sqlx::Error> {
-    dotenv().ok();
-    let database_url: String = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    println!("Kết nối database: {}", database_url);
+    /*
+    Simple function that returns the only one connection pool
+    to avoid too much connections.
+    */
 
-    match PgPoolOptions::new()
+    dotenv().ok(); // load environment variable from .env
+    let database_url: String = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+
+    let pool = PgPoolOptions::new()
         .max_connections(5)
         .connect(&database_url)
-        .await
-    {
-        Ok(p) => {
-            print!("connected");
-            Ok(p)
+        .await;
+
+    match pool {
+        Ok(pool) => {
+            print!("Connected to database!");
+            Ok(pool)
         }
         Err(e) => {
-            print!("cannot connect");
+            print!("Cannot connect to database!");
             Err(e)
         }
     }
