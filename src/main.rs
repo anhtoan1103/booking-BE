@@ -2,9 +2,11 @@ use sqlx::postgres::PgRow;
 use sqlx::Error;
 use sqlx::PgPool;
 use sqlx::Row;
+use actix_cors::Cors;
 mod db;
 mod auth;
 mod models;
+use actix_web::http::header;
 use std::sync::Arc;
 use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
 
@@ -43,7 +45,14 @@ async fn main() -> std::io::Result<()> {
     let pool = Arc::new(db::connect_db().await.expect("Failed to connect to DB"));
 
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:5173") // 👈 Cho phép frontend
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![header::CONTENT_TYPE])
+            .supports_credentials();
+
         App::new()
+            .wrap(cors)
             .app_data(web::Data::new(pool.clone()))
             .service(login)
             .service(create)

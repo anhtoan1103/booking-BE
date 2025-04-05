@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"         # Web framework
+actix-cors = "0.7"
 anyhow = "1.0.97"
 async-std = "1.13.1"
 dotenv = "0.15.0"
