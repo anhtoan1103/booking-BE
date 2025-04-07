@@ -1,4 +1,3 @@
-use dotenv::dotenv;
 use sqlx::pool::Pool;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::Postgres;
@@ -12,7 +11,7 @@ pub async fn connect_db() -> Result<Pool<Postgres>, sqlx::Error> {
     to avoid too much connections.
     */
 
-    dotenv().ok(); // load environment variable from .env
+    //dotenv().ok(); // load environment variable from .env
     let database_url: String = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
     let pool = PgPoolOptions::new()

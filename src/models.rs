@@ -13,3 +13,8 @@ pub struct UserLogin {
   pub email: String,
   pub password: String,
 }
+
+#[derive(Deserialize)]
+pub struct TokenPayload {
+    pub token: String,
+}
